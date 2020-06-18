@@ -1,0 +1,23 @@
+# Adds a systemd unit to autologin as the core user when the cmdline coreos.autologin is set
+[Unit]
+Description=Autologin as the core user
+DefaultDependencies=false
+Before=initrd.target
+
+OnFailure=emergency.target
+OnFailureJobMode=isolate
+
+# need to do this after /sysroot is mounted
+Requires=initrd-root-fs.target
+After=initrd-root-fs.target
+
+# Make sure root filesystem is mounted read-write
+After=ignition-remount-sysroot.service
+
+# Run before initrd-parse-etc so that we can drop files it then picks up.
+Before=initrd-parse-etc.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/sbin/coreos-autologin

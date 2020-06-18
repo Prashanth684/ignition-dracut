@@ -66,6 +66,11 @@ install() {
     install_ignition_unit ignition-disks.service
     install_ignition_unit ignition-mount.service
     install_ignition_unit ignition-files.service
+
+    inst_script "$moddir/coreos-autologin.sh" \
+        "/usr/sbin/coreos-autologin"
+    install_ignition_unit coreos-autologin.service
+
     install_ignition_unit ignition-ask-var-mount.service ignition-diskful.target
     install_ignition_unit ignition-remount-sysroot.service ignition-diskful.target
 
